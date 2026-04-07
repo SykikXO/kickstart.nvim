@@ -163,6 +163,24 @@ require('lazy').setup({
       },
     },
   },
+  {
+    'karb94/neoscroll.nvim',
+    opts = {
+      mappings = { '<C-u>', '<C-d>', '<C-b>', '<C-f>', '<C-y>', '<C-e>', 'zt', 'zz', 'zb' },
+      hide_cursor = true,
+      easing_function = 'quadratic',
+    },
+  },
+  {
+    'sphamba/smear-cursor.nvim',
+    event = 'VeryLazy',
+    opts = {
+      smear_between_buffers = true,
+      smear_between_neighbor_lines = true,
+      smear_insert_mode = true,
+      cursor_color = 'none', -- Matches text color; set hex like "#d3cdc3" if needed
+    },
+  },
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
@@ -702,6 +720,8 @@ require('lazy').setup({
         cpp = { 'clangd' },
         typescript = { 'prettierd' },
         xml = { 'lemminx' },
+        json = { 'jq' },
+        jsonc = { 'jq' },
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
       },
