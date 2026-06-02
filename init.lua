@@ -22,8 +22,6 @@ vim.o.expandtab = true
 vim.o.tabstop = 2
 vim.o.shiftwidth = 2
 vim.o.softtabstop = 2
-vim.o.smartindent = true
-
 vim.o.breakindent = true
 vim.o.undofile = true
 
@@ -126,9 +124,6 @@ rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 
 require('lazy').setup({
-  -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
-
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -857,7 +852,7 @@ require('lazy').setup({
   },
   {
     'nvim-flutter/flutter-tools.nvim',
-    lazy = false,
+    ft = 'dart',
     dependencies = {
       'nvim-lua/plenary.nvim',
       'stevearc/dressing.nvim', -- optional, for better UI
@@ -888,27 +883,43 @@ require('lazy').setup({
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
-    main = 'nvim-treesitter.configs', -- Sets main module to use for opts
-    -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
+    main = 'nvim-treesitter.configs',
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter-textobjects',
+    },
     opts = {
       ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
-      -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
         enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
         additional_vim_regex_highlighting = { 'ruby' },
       },
       indent = { enable = true, disable = { 'ruby' } },
+      textobjects = {
+        select = {
+          enable = true,
+          lookahead = true,
+          keymaps = {
+            ['af'] = '@function.outer',
+            ['if'] = '@function.inner',
+            ['ac'] = '@class.outer',
+            ['ic'] = '@class.inner',
+          },
+        },
+        move = {
+          enable = true,
+          set_jumps = true,
+          goto_next_start = {
+            [']]'] = '@function.outer',
+            [']m'] = '@class.outer',
+          },
+          goto_previous_start = {
+            ['[['] = '@function.outer',
+            ['[m'] = '@class.outer',
+          },
+        },
+      },
     },
-    -- There are additional nvim-treesitter modules that you can use to interact
-    -- with nvim-treesitter. You should go explore a few and see what interests you:
-    --
-    --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-    --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-    --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
@@ -974,35 +985,25 @@ require('lazy').setup({
 -- vim.cmd("colorscheme unokai")
 
 local ls = require 'luasnip'
-local s = ls.snippet
-local t = ls.text_node
-local i = ls.insert_node
+local parse_snippet = ls.parser.parse_snippet
 
 ls.add_snippets('cpp', {
-  s('codeforces', {
-    t {
-      '#include <bits/stdc++.h>',
-      'using namespace std;',
-      'void solve() {',
-      '  ',
-    },
-    i(1, ''),
-    t {
-      '',
-      '}',
-      'int main() {',
-    },
-    t {
-      '',
-      '  ios::sync_with_stdio(false);',
-      '  cout.tie(0);',
-      '  cin.tie(0);',
-      '  int t;',
-      '  cin >> t;',
-      '  while (t--)',
-      '    solve();',
-      '  return 0;',
-      '}',
-    },
-  }),
+  parse_snippet('codeforces', [[
+#include <bits/stdc++.h>
+using namespace std;
+void solve() {
+  ${1}
+}
+int main() {
+
+  ios::sync_with_stdio(false);
+  cout.tie(0);
+  cin.tie(0);
+  int t;
+  cin >> t;
+  while (t--)
+    solve();
+  return 0;
+}
+  ]]),
 })
