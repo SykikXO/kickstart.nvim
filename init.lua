@@ -258,36 +258,6 @@ require('lazy').setup({
   --   priority = 1000,
   --   lazy = false,
   -- },
-  {
-    'rebelot/kanagawa.nvim',
-    lazy = false,
-    priority = 1000,
-  },
-  {
-    'zenbones-theme/zenbones.nvim',
-    -- Optionally install Lush. Allows for more configuration or extending the colorscheme
-    -- If you don't want to install lush, make sure to set g:zenbones_compat = 1
-    -- In Vim, compat mode is turned on as Lush only works in Neovim.
-    dependencies = 'rktjmp/lush.nvim',
-    lazy = false,
-    priority = 1000,
-    -- you can set set configuration options here
-    config = function()
-      vim.g.zenbones_darken_comments = 45
-      vim.cmd.colorscheme 'tokyobones'
-    end,
-  },
-  -- {
-  --   "xiyaowong/transparent.nvim",
-  --   opts = {},
-  --   priority = 1000,
-  --   lazy = false,
-  -- },
-  {
-    'typicode/bg.nvim',
-    lazy = false,
-  },
-
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
@@ -850,16 +820,7 @@ require('lazy').setup({
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
-  {
-    'nvim-flutter/flutter-tools.nvim',
-    ft = 'dart',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'stevearc/dressing.nvim', -- optional, for better UI
-    },
-    config = true,
-  },
-  {
+{
     'nvim-lualine/lualine.nvim',
     event = 'VeryLazy',
     opts = {
@@ -931,7 +892,6 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  require 'kickstart.plugins.debug',
   require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
@@ -969,6 +929,8 @@ require('lazy').setup({
     },
   },
 })
+
+vim.cmd.colorscheme 'default'
 
 -- vim.api.nvim_create_autocmd("ColorScheme", {
 --   pattern = "*",
